@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberSafe AI</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f0f4ff;
+  color: #172554;
+}
+header {
+  background: #102a56;
+  color: white;
+  padding: 24px 16px;
+  text-align: center;
+}
+header h1 { margin: 0 0 8px; }
+header p { margin: 0; color: #dbeafe; }
+main {
+  max-width: 650px;
+  margin: 24px auto;
+  padding: 0 15px;
+}
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px #17255415;
+  margin-bottom: 18px;
+}
+label { display: block; font-weight: bold; margin-bottom: 10px; }
+textarea {
+  width: 100%;
+  min-height: 140px;
+  padding: 12px;
+  border: 1px solid #b8c7df;
+  border-radius: 10px;
+  font: inherit;
+  resize: vertical;
+}
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+button.secondary { background: #dbeafe; color: #1e40af; }
+#result {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 10px;
+  background: #eff6ff;
+  overflow-wrap: anywhere;
+}
+.hidden { display: none; }
+li { margin: 10px 0; }
+footer { text-align: center; padding: 20px; color: #64748b; font-size: 13px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🛡️ CyberSafe AI</h1>
+  <p>Your beginner-friendly phishing awareness assistant</p>
+</header>
+
+<main>
+  <section class="card">
+    <h2>🔍 Message Safety Checker</h2>
+    <p>Paste a suspicious SMS, email or message below.</p>
+    <label for="message">Your message</label>
+    <textarea id="message" placeholder="Example: Your account is blocked! Verify your password immediately..."></textarea>
+    <button onclick="checkMessage()">Analyze Message</button>
+    <button class="secondary" onclick="loadExample()">Try a Sample Message</button>
+    <div id="result" class="hidden" aria-live="polite"></div>
+  </section>
+
+  <section class="card">
+    <h2>🔐 Stay Safe Online</h2>
+    <ul>
+      <li>Never share your password or OTP.</li>
+      <li>Check the sender before trusting a message.</li>
+      <li>Avoid unexpected links and attachments.</li>
+      <li>Verify urgent requests through official channels.</li>
+      <li>Never pay a fee just to claim an unexpected prize.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>💡 About This Project</h2>
+    <p>CyberSafe helps users learn about common phishing warning signs using simple text-analysis rules.</p>
+    <p><strong>Note:</strong> This is an educational prototype, not a real AI detector. A message with no warnings can still be dangerous.</p>
+  </section>
+</main>
+
+<footer>Built for the Hacktoberfest Islamabad AI Build Challenge</footer>
+
+<script>
+function checkMessage() {
+  const message = document.getElementById("message").value.trim();
+  const result = document.getElementById("result");
+
+  if (!message) {
+    result.classList.remove("hidden");
+    result.innerHTML = "<strong>Please enter a message first.</strong>";
+    return;
+  }
+
+  const text = message.toLowerCase();
+  const warnings = [];
+
+  if (/password|verify your account|account blocked|otp|one-time code/.test(text)) {
+    warnings.push("Requests for passwords, OTPs or account verification need careful checking.");
+  }
+
+  if (/urgent|immediately|within \d+ minutes|act now|blocked today/.test(text)) {
+    warnings.push("The message may be using urgency or pressure.");
+  }
+
+  if (/you won|winner|claim your prize|processing fee|prize money/.test(text)) {
+    warnings.push("An unexpected prize or payment request may be a scam warning sign.");
+  }
+
+  if (/https?:\/\/|click here|open this link/.test(text)) {
+    warnings.push("A link is present or mentioned. Check its destination independently before opening it.");
+  }
+
+  if (warnings.length > 0) {
+    result.innerHTML = "<h3>⚠️ Warning Signs Found</h3><ul>" +
+      warnings.map(w => "<li>" + w + "</li>").join("") +
+      "</ul><p><strong>Safety advice:</strong> Do not share sensitive information. Verify the sender independently.</p>";
+  } else {
+    result.innerHTML = "<h3>✅ No Listed Warning Signs Found</h3><p>This does not mean the message is safe. Check the sender and verify any claims independently.</p>";
+  }
+
+  result.classList.remove("hidden");
+}
+
+function loadExample() {
+  document.getElementById("message").value =
+    "URGENT! Your account is blocked today. Click here to verify your password immediately: http://example.com";
+  checkMessage();
+}
+</script>
+</body>
+</html>
+
